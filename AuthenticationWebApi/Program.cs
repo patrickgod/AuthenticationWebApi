@@ -1,6 +1,7 @@
 global using AuthenticationWebApi.Models;
 global using AuthenticationWebApi.Services.AuthService;
 global using Microsoft.EntityFrameworkCore;
+global using AuthenticationWebApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlite("Data Source=auth.db"));
 
 var app = builder.Build();
 
