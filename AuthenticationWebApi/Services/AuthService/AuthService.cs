@@ -4,6 +4,13 @@ namespace AuthenticationWebApi.Services.AuthService
 {
     public class AuthService : IAuthService
     {
+        private readonly DataContext _context;
+
+        public AuthService(DataContext context)
+        {
+            _context = context;
+        }
+
         public async Task<User> RegisterUser(UserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -14,6 +21,9 @@ namespace AuthenticationWebApi.Services.AuthService
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
 
             return user;
         }
