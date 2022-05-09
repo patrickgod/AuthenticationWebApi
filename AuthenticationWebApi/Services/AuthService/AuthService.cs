@@ -11,6 +11,22 @@ namespace AuthenticationWebApi.Services.AuthService
             _context = context;
         }
 
+        public async Task<AuthResponseDto> Login(UserDto request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            if(user == null)
+            {
+                return new AuthResponseDto { Message = "User not found." };
+            }
+
+            if(!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                return new AuthResponseDto { Message = "Wrong Password." };
+            }
+
+            return new AuthResponseDto { Success = true };
+        }
+
         public async Task<User> RegisterUser(UserDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
