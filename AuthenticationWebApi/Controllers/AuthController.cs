@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationWebApi.Controllers
@@ -29,6 +30,12 @@ namespace AuthenticationWebApi.Controllers
                 return Ok(response);
 
             return BadRequest(response.Message);
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult<string> Aloha()
+        {
+            return Ok("Aloha! You're authorized!");
         }
     }
 }
