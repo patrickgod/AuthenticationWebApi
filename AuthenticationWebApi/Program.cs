@@ -2,6 +2,7 @@ global using AuthenticationWebApi.Models;
 global using AuthenticationWebApi.Services.AuthService;
 global using Microsoft.EntityFrameworkCore;
 global using AuthenticationWebApi.Data;
+global using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
