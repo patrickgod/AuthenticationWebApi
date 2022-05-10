@@ -42,7 +42,7 @@ namespace AuthenticationWebApi.Controllers
             return BadRequest(response.Message);
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, Authorize(Roles = "User,Admin")]
         public ActionResult<string> Aloha()
         {
             return Ok("Aloha! You're authorized!");
