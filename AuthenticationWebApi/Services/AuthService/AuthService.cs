@@ -60,6 +60,32 @@ namespace AuthenticationWebApi.Services.AuthService
             return user;
         }
 
+        public async Task<AuthResponseDto> RefreshToken()
+        {
+            var refreshToken = _httpContextAccessor?.HttpContext?.Request.Cookies["refreshToken"];
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            if(user == null)
+            {
+                return new AuthResponseDto { Message = "Invalid Refresh Token" };
+            }
+            else if(user.TokenExpires < DateTime.Now)
+            {
+                return new AuthResponseDto { Message = "Token expired." };
+            }
+
+            string token = CreateToken(user);
+            var newRefreshToken = CreateRefreshToken();
+            SetRefreshToken(newRefreshToken, user);
+
+            return new AuthResponseDto
+            {
+                Success = true,
+                Token = token,
+                RefreshToken = newRefreshToken.Token,
+                TokenExpires = newRefreshToken.Expires
+            };
+        }
+
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
